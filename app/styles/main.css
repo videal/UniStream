@@ -1,0 +1,8 @@
+#tags-list .tag {
+    font-size: 150%;
+    overflow: hidden;
+}
+
+#tags-name-input {
+    width: 510px;
+}

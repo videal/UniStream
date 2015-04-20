@@ -1,0 +1,22 @@
+<div id="tags" class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <p>
+            <form class="form-inline" name="addTagForm" ng-submit="addTag(addTagForm)" novalidate>
+                <div class="form-group" ng-class="{'has-error': addTagForm.$submitted && !addTagForm.name.$valid}">
+                    <input id="tags-name-input" name="name" class="form-control" type="text" placeholder="NewHashtag" ng-model="newTag.name" required />
+                    <button type="submit" class="btn btn-success">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </div>
+            </form>
+        </p>
+        <div id="tags-list" class="list-group">
+            <a class="list-group-item tag" ng-repeat="tag in tags" ui-sref="stream({'tag': tag.name})">
+                #{{ tag.name }}
+                <button class="btn btn-danger delete-btn pull-right" ng-click="removeTag(tag, $event)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </a>
+        </div>  
+    </div>
+</div>

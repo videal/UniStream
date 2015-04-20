@@ -1,0 +1,13 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1>Tweets for #{{ tag.name }}</h1>
+        </div>
+        <p class="text-center">
+            <button class="btn btn-primary" ng-show="newTweets.length > 0" ng-click="showNewTweets()">View {{ newTweets.length }} new tweet(s)</button>
+        </p>
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="tweet in currentTweets">{{ tweet.content }}</li>
+        </ul>
+    </div>
+</div>

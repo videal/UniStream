@@ -3,6 +3,7 @@
 angular.module('app')
     .controller('TagsController', ['$scope', 'tagStorage', function ($scope, tagStorage) {
         $scope.newTag = {name: ''};
+        $scope.contentSource = 'instagram';
         $scope.tags = tagStorage.findAll();
         $scope.addTag = addTag;
         $scope.removeTag = removeTag;
@@ -15,7 +16,6 @@ angular.module('app')
                 return;
             }
 
-            $scope.newTag.name = $scope.newTag.name.replace(/#/g, '');
             tagStorage.add($scope.newTag);
             $scope.newTag = {name: ''};
             form.$setPristine();

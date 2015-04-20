@@ -1,13 +1,19 @@
-<div class="row">
+<div id="stream" class="row">
     <div class="col-md-12">
         <div class="page-header">
-            <h1>Tweets for #{{ tag.name }}</h1>
+            <h1>Stream for <strong class="text-primary">{{ tag.name }}</strong></h1>
         </div>
         <p class="text-center">
-            <button class="btn btn-primary" ng-show="newTweets.length > 0" ng-click="showNewTweets()">View {{ newTweets.length }} new tweet(s)</button>
+            <button class="btn btn-primary" ng-show="newItems.length > 0" ng-click="showNewItems()">View {{ newItems.length }} new items(s)</button>
         </p>
-        <ul class="list-group">
-            <li class="list-group-item" ng-repeat="tweet in currentTweets">{{ tweet.content }}</li>
+        <ul id="stream-items">
+            <li class="thumbnail" ng-repeat="item in currentItems">
+                <img ng-show="item.img" ng-src="{{ item.img }}"/>
+                <div class="caption">
+                    <h3 ng-show="item.header">{{ item.header }}</h3>
+                    <p ng-show="item.body">{{ item.body }}</p>
+                </div>
+            </li>
         </ul>
     </div>
 </div>

@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('app', ['ui.router'])
+    .constant('instagramClientId', '0b5021fd8589490ca339dff05ed9772b')
     .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/tags');
         
@@ -11,7 +12,7 @@ angular.module('app', ['ui.router'])
                 controller: 'TagsController'
             })
             .state('stream', {
-                url: '/stream/:tag',
+                url: '/stream/:source/:tag',
                 templateUrl: 'views/stream.html',
                 controller: 'StreamController'
             });;

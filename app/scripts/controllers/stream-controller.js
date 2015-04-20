@@ -1,41 +1,42 @@
 'use strict';
 
 angular.module('app')
-    .controller('StreamController', ['$scope', '$stateParams', '$interval', 'twitter', 'tagStorage', function ($scope, $stateParams, $interval, twitter, tagStorage) {
-        $scope.newTweets = [];
-        $scope.currentTweets = [];
-        $scope.showNewTweets = showNewTweets;
+    .controller('StreamController', ['$scope', '$stateParams', '$interval', '$injector', 'tagStorage', function ($scope, $stateParams, $interval, $injector, tagStorage) {
+        $scope.newItems = [];
+        $scope.currentItems = [];
+        $scope.showNewItems = showNewItems;
         $scope.tag = tagStorage.findOne($stateParams.tag);
         $scope.$on('$destroy', function () {
             $interval.cancel(task);
         });
-        
+
         var previousQueryDate = null;
         var task = null;
-        twitter.getTweets($stateParams.tag, previousQueryDate)
-            .then(function (tweets) {
+        var contentProvider = $injector.get($stateParams.source);
+        contentProvider.getItems($stateParams.tag, previousQueryDate)
+            .then(function (items) {
                 previousQueryDate = new Date();
-                $scope.currentTweets = tweets;
-                task = $interval(getNewTweets, 2000);
+                $scope.currentItems = items;
+                task = $interval(getNewItems, 2000);
             });
 
         /**
          * @return {undefined}
          */
-        function showNewTweets() {
-            $scope.currentTweets =
-                $scope.newTweets.concat($scope.currentTweets);
-            $scope.newTweets = [];
+        function showNewItems() {
+            $scope.currentItems =
+                $scope.newItems.concat($scope.currentItems);
+            $scope.newItems = [];
         }
         
         /**
          * @return {Promise}
          */
-        function getNewTweets() {
-            twitter.getTweets($stateParams.tag, previousQueryDate)
-                .then(function (tweets) {
-                    previousQueryDate = new Date();
-                    $scope.newTweets = tweets.concat($scope.newTweets);
-                });
+        function getNewItems() {
+            // contentProvider.getItems($stateParams.tag, previousQueryDate)
+            //     .then(function (items) {
+            //         previousQueryDate = new Date();
+            //         $scope.newItems = items.concat($scope.newItems);
+            //     });
         }
     }]);

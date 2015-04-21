@@ -6,7 +6,13 @@ function ContentProvider() {}
 /**
  * @public
  * @param {String} tag
- * @param {Date} startDate
  * @return {Promise}
  */
-ContentProvider.prototype.getItems = function (tag, startDate) {};
+ContentProvider.prototype.consumeNewItems = function (tag) {};
+
+/**
+ * @public
+ * @param {String} tag
+ * @return {Promise}
+ */
+ContentProvider.prototype.consumeOldItems = function (tag) {};

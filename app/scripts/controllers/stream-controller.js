@@ -5,21 +5,40 @@ angular.module('app')
         $scope.newItems = [];
         $scope.currentItems = [];
         $scope.showNewItems = showNewItems;
+        $scope.showOldItems = showOldItems;
+        $scope.isLoadingItems = false;
         $scope.tag = tagStorage.findOne($stateParams.tag);
         $scope.$on('$destroy', function () {
             $interval.cancel(task);
         });
 
-        var previousQueryDate = null;
         var task = null;
         var contentProvider = $injector.get($stateParams.source);
-        contentProvider.getItems($stateParams.tag, previousQueryDate)
+        $scope.isLoadingItems = true;
+        contentProvider.consumeNewItems($stateParams.tag)
             .then(function (items) {
-                previousQueryDate = new Date();
                 $scope.currentItems = items;
-                task = $interval(getNewItems, 2000);
+                task = $interval(getNewItems, 30000);
+            })
+            .finally(function () {
+                $scope.isLoadingItems = false;
             });
 
+        /**
+         * @return {undefined}
+         */
+        function showOldItems() {
+            $scope.isLoadingItems = true;
+            contentProvider.consumeOldItems($stateParams.tag)
+                .then(function (items) {
+                    $scope.currentItems =
+                        $scope.currentItems.concat(items);
+                })
+                .finally(function () {
+                    $scope.isLoadingItems = false;
+                });
+        }
+        
         /**
          * @return {undefined}
          */
@@ -30,13 +49,16 @@ angular.module('app')
         }
         
         /**
-         * @return {Promise}
+         * @return {undefined}
          */
         function getNewItems() {
-            // contentProvider.getItems($stateParams.tag, previousQueryDate)
-            //     .then(function (items) {
-            //         previousQueryDate = new Date();
-            //         $scope.newItems = items.concat($scope.newItems);
-            //     });
+            $scope.isLoadingItems = true;
+            contentProvider.consumeNewItems($stateParams.tag)
+                .then(function (items) {
+                    $scope.newItems = items.concat($scope.newItems);
+                })
+                .finally(function () {
+                    $scope.isLoadingItems = false;
+                });
         }
     }]);

@@ -15,6 +15,7 @@ function TagStorage() {
      * @type {Array}
      */
     this.tags = [
+        {name: 'love'},
         {name: 'GabeNewell'},
         {name: 'RickAstley'}
     ];

@@ -6,12 +6,15 @@
         <p class="text-center">
             <button class="btn btn-primary" ng-show="newItems.length > 0" ng-click="showNewItems()">View {{ newItems.length }} new items(s)</button>
         </p>
-        <ul id="stream-items">
-            <li class="thumbnail" ng-repeat="item in currentItems">
-                <img ng-show="item.img" ng-src="{{ item.img }}"/>
-                <div class="caption">
-                    <h3 ng-show="item.header">{{ item.header }}</h3>
-                    <p ng-show="item.body">{{ item.body }}</p>
+        <ul id="stream-items" infinite-scroll="showOldItems()" infinite-scroll-distance="1" infinite-scroll-disabled='isLoadingItems'>
+            <li ng-repeat="item in currentItems">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Posted on {{ item.creation_date | date:'MMM d, y HH:mm:ss'}}</div>
+                    <div class="panel-body">
+                        <img class="img-thumbnail center-block" ng-show="item.img" ng-src="{{ item.img }}"/>
+                        <h3 ng-show="item.header">{{ item.header }}</h3>
+                        <p ng-show="item.body">{{ item.body }}</p>
+                    </div>
                 </div>
             </li>
         </ul>

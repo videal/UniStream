@@ -11,3 +11,9 @@
     list-style-type: none;
     padding-left: 0;
 }
+
+#stream-scroll-btn {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}

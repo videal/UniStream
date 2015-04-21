@@ -43,6 +43,12 @@ function Instagram($q, $http, clientId) {
      * @type {String}
      */
     this.nextMaxTagId;
+
+    /**
+     * @private
+     * @type {String}
+     */
+    this.lastTag;
     
     /**
      * @private
@@ -54,14 +60,17 @@ function Instagram($q, $http, clientId) {
 /**
  * @override
  */
-Instagram.prototype.consumeNewItems = function (tag) {
+Instagram.prototype.consumeNewItems = function (tag, isInitial) {
+    this.resetPaginationDataIfNeeded(tag);
     var self = this;
     var deferred = this.$q.defer();
-    var url = 'https://api.instagram.com/v1/tags/' + tag +
-        '/media/recent?count=' + this.itemsPerPage + '&min_tag_id=' +
-        this.minTagId + '&client_id=' + this.clientId +
-        '&callback=JSON_CALLBACK';
+    var url = this.getRequestUrl(tag) + '&min_tag_id=' + this.minTagId;
     this.$http.jsonp(url).success(function (response) {
+        if (response.meta.code != 200) {
+            deferred.reject();
+            return;
+        }
+        
         var items = [];
 
         if (response.data.length > 0) {
@@ -71,19 +80,7 @@ Instagram.prototype.consumeNewItems = function (tag) {
                 self.nextMaxTagId = response.pagination.next_max_tag_id;
             }
 
-            for (var i in response.data) {
-                if (response.data[i].type != 'image') {
-                    continue;
-                }
-
-                items.push({
-                    header: response.data[i].caption.text,
-                    body: '',
-                    img: response.data[i].images.standard_resolution.url,
-                    creation_date: new Date(
-                        response.data[i].created_time * 1000)
-                });
-            }            
+            self.fillItems(response, items);
         }
         
         deferred.resolve(items);
@@ -95,6 +92,7 @@ Instagram.prototype.consumeNewItems = function (tag) {
  * @override
  */
 Instagram.prototype.consumeOldItems = function (tag) {
+    this.resetPaginationDataIfNeeded(tag);
     var deferred = this.$q.defer();
     
     if (this.nextMaxTagId == null) {
@@ -103,33 +101,69 @@ Instagram.prototype.consumeOldItems = function (tag) {
     }
     
     var self = this;
-    var url = 'https://api.instagram.com/v1/tags/' + tag +
-        '/media/recent?count=' + this.itemsPerPage + '&max_tag_id=' +
-        this.nextMaxTagId + '&client_id=' + this.clientId +
-        '&callback=JSON_CALLBACK';
-
+    var url = this.getRequestUrl(tag) + '&max_tag_id=' + this.nextMaxTagId;
     this.$http.jsonp(url).success(function (response) {
+        if (response.meta.code != 200) {
+            deferred.reject();
+            return;
+        }
+        
         var items = [];
 
         if (response.data.length > 0) {
             self.nextMaxTagId = response.pagination.next_max_tag_id;
-
-            for (var i in response.data) {
-                if (response.data[i].type != 'image') {
-                    continue;
-                }
-
-                items.push({
-                    header: response.data[i].caption.text,
-                    body: '',
-                    img: response.data[i].images.standard_resolution.url,
-                    creation_date: new Date(
-                        response.data[i].created_time * 1000)
-                });
-            }            
+            self.fillItems(response, items);
         }
         
         deferred.resolve(items);
     });
     return deferred.promise;
+};
+
+/**
+ * @private
+ * @param {String} tag
+ * @return {String}
+ */
+Instagram.prototype.getRequestUrl = function (tag) {
+    return 'https://api.instagram.com/v1/tags/' + tag +
+        '/media/recent?count=' + this.itemsPerPage + '&client_id=' +
+        this.clientId + '&callback=JSON_CALLBACK';
+};
+
+/**
+ * @private
+ * @param {String} tag
+ * @return {undefined}
+ */
+Instagram.prototype.resetPaginationDataIfNeeded = function (tag) {
+    if (this.lastTag === tag) {
+        return;
+    }
+
+    this.lastTag = tag;
+    this.minTagId = '0';
+    this.nextMaxTagId = null;
+};
+
+/**
+ * @private
+ * @param {Object} response
+ * @param {Array} items
+ * @return {undefined}
+ */
+Instagram.prototype.fillItems = function (response, items) {
+    for (var i in response.data) {
+        if (response.data[i].type != 'image') {
+            continue;
+        }
+
+        items.push({
+            header: response.data[i].caption.text,
+            body: '',
+            img: response.data[i].images.standard_resolution.url,
+            creation_date: new Date(
+                response.data[i].created_time * 1000)
+        });
+    }
 };

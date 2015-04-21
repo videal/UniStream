@@ -1,15 +1,22 @@
 'use strict';
 
 angular.module('app')
-    .factory('tagStorage', [function () {
-        return new TagStorage();
+    .factory('tagStorage', ['localStorageService', function (localStorageService) {
+        return new TagStorage(localStorageService);
     }]);
 
 /**
  * @class
+ * @param {Object} localStorage
  * @constructor
  */
-function TagStorage() {
+function TagStorage(localStorage) {
+    /**
+     * @private
+     * @type {Object}
+     */
+    this.localStorage = localStorage;
+
     /**
      * @private
      * @type {Array}
@@ -19,6 +26,8 @@ function TagStorage() {
         {name: 'GabeNewell'},
         {name: 'RickAstley'}
     ];
+
+    this.init();
 }
 
 /**
@@ -51,6 +60,7 @@ TagStorage.prototype.findOne = function (name) {
  */
 TagStorage.prototype.add = function (tag) {
     this.tags.push(tag);
+    this.save();
 };
 
 /**
@@ -60,4 +70,25 @@ TagStorage.prototype.add = function (tag) {
  */
 TagStorage.prototype.remove = function (tag) {
     this.tags.splice(this.tags.indexOf(tag), 1);
+    this.save();
+};
+
+/**
+ * @private
+ * @return {undefined}
+ */
+TagStorage.prototype.init = function () {
+    var savedTags = this.localStorage.get('tags');
+
+    if (savedTags != null) {
+        this.tags = savedTags;
+    }
+};
+
+/**
+ * @private
+ * @return {undefined}
+ */
+TagStorage.prototype.save = function () {
+    this.localStorage.set('tags', this.tags);
 };

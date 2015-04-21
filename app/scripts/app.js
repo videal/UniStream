@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app', ['ui.router', 'infinite-scroll'])
+angular.module('app', ['ui.router', 'infinite-scroll', 'LocalStorageModule'])
     .constant('instagramClientId', '0b5021fd8589490ca339dff05ed9772b')
     .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/tags');

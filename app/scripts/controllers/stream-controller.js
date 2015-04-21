@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('app')
-    .controller('StreamController', ['$scope', '$stateParams', '$interval', '$injector', 'tagStorage', function ($scope, $stateParams, $interval, $injector, tagStorage) {
+    .controller('StreamController', ['$scope', '$stateParams', '$interval', '$injector', '$window', 'tagStorage', function ($scope, $stateParams, $interval, $injector, $window, tagStorage) {
         $scope.newItems = [];
         $scope.currentItems = [];
+        $scope.isLoadingItems = false;
         $scope.showNewItems = showNewItems;
         $scope.showOldItems = showOldItems;
-        $scope.isLoadingItems = false;
+        $scope.gotoTop = gotoTop;
         $scope.tag = tagStorage.findOne($stateParams.tag);
         $scope.$on('$destroy', function () {
             $interval.cancel(task);
@@ -18,12 +19,19 @@ angular.module('app')
         contentProvider.consumeNewItems($stateParams.tag)
             .then(function (items) {
                 $scope.currentItems = items;
-                task = $interval(getNewItems, 30000);
+                task = $interval(getNewItems, 45000);
             })
             .finally(function () {
                 $scope.isLoadingItems = false;
             });
 
+        /**
+         * @return {undefined}
+         */
+        function gotoTop() {
+            $window.scrollTo(0, 0);
+        }
+        
         /**
          * @return {undefined}
          */

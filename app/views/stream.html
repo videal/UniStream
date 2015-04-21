@@ -6,7 +6,7 @@
         <p class="text-center">
             <button class="btn btn-primary" ng-show="newItems.length > 0" ng-click="showNewItems()">View {{ newItems.length }} new items(s)</button>
         </p>
-        <ul id="stream-items" infinite-scroll="showOldItems()" infinite-scroll-distance="1" infinite-scroll-disabled='isLoadingItems'>
+        <ul id="stream-items" infinite-scroll="showOldItems()" infinite-scroll-immediate-check="false" infinite-scroll-disabled='isLoadingItems'>
             <li ng-repeat="item in currentItems">
                 <div class="panel panel-default">
                     <div class="panel-heading">Posted on {{ item.creation_date | date:'MMM d, y HH:mm:ss'}}</div>
@@ -19,4 +19,7 @@
             </li>
         </ul>
     </div>
+    <button id="stream-scroll-btn" class="btn btn-lg btn-success" title="Goto to top" ng-show="true" ng-click="gotoTop()">
+        <span class="glyphicon glyphicon-arrow-up"></span>
+    </button>
 </div>

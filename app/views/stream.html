@@ -12,8 +12,8 @@
                     <div class="panel-heading">Posted on {{ item.creation_date | date:'MMM d, y HH:mm:ss'}}</div>
                     <div class="panel-body">
                         <img class="img-thumbnail center-block" ng-show="item.img" ng-src="{{ item.img }}"/>
-                        <h3 ng-show="item.header">{{ item.header }}</h3>
-                        <p ng-show="item.body">{{ item.body }}</p>
+                        <h3 ng-bind-html="renderHTML(item.header)"></h3>
+                        <p ng-bind-html="renderHTML(item.body)"></p>
                     </div>
                 </div>
             </li>

@@ -6,9 +6,10 @@ function ContentProvider() {}
 /**
  * @public
  * @param {String} tag
+ * @param {Boolean} is_initial
  * @return {Promise}
  */
-ContentProvider.prototype.consumeNewItems = function (tag) {};
+ContentProvider.prototype.consumeNewItems = function (tag, is_initial) {};
 
 /**
  * @public

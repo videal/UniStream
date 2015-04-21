@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-    .controller('StreamController', ['$scope', '$stateParams', '$interval', '$injector', '$window', 'tagStorage', function ($scope, $stateParams, $interval, $injector, $window, tagStorage) {
+    .controller('StreamController', ['$scope', '$stateParams', '$interval', '$injector', '$window', 'tagStorage', '$sce', function ($scope, $stateParams, $interval, $injector, $window, tagStorage, $sce) {
         $scope.newItems = [];
         $scope.currentItems = [];
         $scope.isLoadingItems = false;
@@ -13,10 +13,15 @@ angular.module('app')
             $interval.cancel(task);
         });
 
+        $scope.renderHTML = function(html_code)
+        {
+            return $sce.trustAsHtml(html_code);
+        };
+
         var task = null;
         var contentProvider = $injector.get($stateParams.source);
         $scope.isLoadingItems = true;
-        contentProvider.consumeNewItems($stateParams.tag)
+        contentProvider.consumeNewItems($stateParams.tag, true)
             .then(function (items) {
                 $scope.currentItems = items;
                 task = $interval(getNewItems, 45000);
@@ -61,7 +66,7 @@ angular.module('app')
          */
         function getNewItems() {
             $scope.isLoadingItems = true;
-            contentProvider.consumeNewItems($stateParams.tag)
+            contentProvider.consumeNewItems($stateParams.tag, false)
                 .then(function (items) {
                     $scope.newItems = items.concat($scope.newItems);
                 })

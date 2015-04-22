@@ -5,13 +5,12 @@ angular.module('app')
         $scope.newTag = {name: ''};
         $scope.contentSource = 'instagram';
         $scope.tags = tagStorage.findAll();
-        $scope.addTag = addTag;
-        $scope.removeTag = removeTag;
-
+        
         /**
+         * @param {Object} form
          * @return {undefined}
          */
-        function addTag(form) {
+        $scope.addTag = function(form) {
             if (!form.$valid) {
                 return;
             }
@@ -20,14 +19,14 @@ angular.module('app')
             $scope.newTag = {name: ''};
             form.$setPristine();
             form.$setUntouched();
-        }
+        };
 
         /**
          * @param {Object} tag
          * @param {Object} $event
          * @return {undefined}
          */
-        function removeTag(tag, $event) {
+        $scope.removeTag = function(tag, $event) {
             $event.stopPropagation();
             $event.preventDefault();
             tagStorage.remove(tag);

@@ -27,7 +27,7 @@ function GoogleNews($q, $http) {
 
     /**
      * @private
-     * @type {NaN}
+     * @type {Number}
      */
     this.currentPage = 0;
 
@@ -41,8 +41,8 @@ function GoogleNews($q, $http) {
 /**
  * @override
  */
-GoogleNews.prototype.consumeNewItems = function (tag, is_initial) {
-    if (is_initial) {
+GoogleNews.prototype.consumeNewItems = function (tag, isInitial) {
+    if (isInitial) {
         this.currentPage = 0;
         return this.getItems(tag, false);
     }
@@ -62,8 +62,8 @@ GoogleNews.prototype.consumeOldItems = function (tag) {
 /**
  * @private
  */
-GoogleNews.prototype.getItems = function (tag, increment_page) {
-    if (increment_page) {
+GoogleNews.prototype.getItems = function (tag, incrementPage) {
+    if (incrementPage) {
         this.currentPage++;
     }
 
@@ -92,7 +92,7 @@ GoogleNews.prototype.getItems = function (tag, increment_page) {
                 });
             }
         } else {
-            if (increment_page) {
+            if (incrementPage) {
                 self.currentPage--;
             }
         }

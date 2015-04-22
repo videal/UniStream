@@ -5,19 +5,12 @@ angular.module('app')
         $scope.newItems = [];
         $scope.currentItems = [];
         $scope.isLoadingItems = false;
-        $scope.showNewItems = showNewItems;
-        $scope.showOldItems = showOldItems;
-        $scope.gotoTop = gotoTop;
+        $scope.hasOldItems = true;
         $scope.tag = tagStorage.findOne($stateParams.tag);
+        
         $scope.$on('$destroy', function () {
             $interval.cancel(task);
         });
-
-        $scope.renderHTML = function(html_code)
-        {
-            return $sce.trustAsHtml(html_code);
-        };
-
         var task = null;
         var contentProvider = $injector.get($stateParams.source);
         $scope.isLoadingItems = true;
@@ -29,38 +22,51 @@ angular.module('app')
             .finally(function () {
                 $scope.isLoadingItems = false;
             });
+        
+        /**
+         * @param {String} htmlCode
+         * @return {Object}
+         */
+        $scope.renderHTML = function(htmlCode) {
+            return $sce.trustAsHtml(htmlCode);
+        };
 
         /**
          * @return {undefined}
          */
-        function gotoTop() {
+        $scope.gotoTop = function() {
             $window.scrollTo(0, 0);
-        }
+        };
         
         /**
          * @return {undefined}
          */
-        function showOldItems() {
+        $scope.showOldItems = function() {
             $scope.isLoadingItems = true;
             contentProvider.consumeOldItems($stateParams.tag)
                 .then(function (items) {
+                    if (items.length == 0) {
+                        $scope.hasOldItems = false;
+                        return;
+                    }
+                    
                     $scope.currentItems =
                         $scope.currentItems.concat(items);
                 })
                 .finally(function () {
                     $scope.isLoadingItems = false;
                 });
-        }
+        };
         
         /**
          * @return {undefined}
          */
-        function showNewItems() {
+        $scope.showNewItems = function() {
             $scope.currentItems =
                 $scope.newItems.concat($scope.currentItems);
             $scope.newItems = [];
-        }
-        
+        };
+
         /**
          * @return {undefined}
          */

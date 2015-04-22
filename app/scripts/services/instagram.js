@@ -126,9 +126,9 @@ Instagram.prototype.consumeOldItems = function (tag) {
  * @return {String}
  */
 Instagram.prototype.getRequestUrl = function (tag) {
-    return 'https://api.instagram.com/v1/tags/' + tag +
+    return 'https://api.instagram.com/v1/tags/' + encodeURIComponent(tag) +
         '/media/recent?count=' + this.itemsPerPage + '&client_id=' +
-        this.clientId + '&callback=JSON_CALLBACK';
+        encodeURIComponent(this.clientId) + '&callback=JSON_CALLBACK';
 };
 
 /**

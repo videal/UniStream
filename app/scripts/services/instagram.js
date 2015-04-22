@@ -49,22 +49,16 @@ function Instagram($q, $http, clientId) {
      * @type {String}
      */
     this.lastTag;
-    
-    /**
-     * @private
-     * @type {Number}
-     */
-    this.itemsPerPage = 10;
 }
 
 /**
  * @override
  */
-Instagram.prototype.consumeNewItems = function (tag, isInitial) {
+Instagram.prototype.consumeNewItems = function (tag, isInitial, count) {
     this.resetPaginationDataIfNeeded(tag);
     var self = this;
     var deferred = this.$q.defer();
-    var url = this.getRequestUrl(tag) + '&min_tag_id=' + this.minTagId;
+    var url = this.getRequestUrl(tag, count) + '&min_tag_id=' + this.minTagId;
     this.$http.jsonp(url).success(function (response) {
         if (response.meta.code != 200) {
             deferred.reject();
@@ -91,7 +85,7 @@ Instagram.prototype.consumeNewItems = function (tag, isInitial) {
 /**
  * @override
  */
-Instagram.prototype.consumeOldItems = function (tag) {
+Instagram.prototype.consumeOldItems = function (tag, count) {
     this.resetPaginationDataIfNeeded(tag);
     var deferred = this.$q.defer();
     
@@ -101,7 +95,8 @@ Instagram.prototype.consumeOldItems = function (tag) {
     }
     
     var self = this;
-    var url = this.getRequestUrl(tag) + '&max_tag_id=' + this.nextMaxTagId;
+    var url = this.getRequestUrl(tag, count) + '&max_tag_id=' +
+        this.nextMaxTagId;
     this.$http.jsonp(url).success(function (response) {
         if (response.meta.code != 200) {
             deferred.reject();
@@ -123,11 +118,12 @@ Instagram.prototype.consumeOldItems = function (tag) {
 /**
  * @private
  * @param {String} tag
+ * @param {Number} itemsCount
  * @return {String}
  */
-Instagram.prototype.getRequestUrl = function (tag) {
+Instagram.prototype.getRequestUrl = function (tag, itemsCount) {
     return 'https://api.instagram.com/v1/tags/' + encodeURIComponent(tag) +
-        '/media/recent?count=' + this.itemsPerPage + '&client_id=' +
+        '/media/recent?count=' + itemsCount + '&client_id=' +
         encodeURIComponent(this.clientId) + '&callback=JSON_CALLBACK';
 };
 
@@ -164,7 +160,8 @@ Instagram.prototype.fillItems = function (response, items) {
             body: '',
             img: response.data[i].images.standard_resolution.url,
             creation_date: new Date(
-                response.data[i].created_time * 1000)
+                response.data[i].created_time * 1000),
+            provider: 'instagram'
         });
     }
 };

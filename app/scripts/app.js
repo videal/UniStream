@@ -1,7 +1,17 @@
 'use strict';
 
-angular.module('app', ['ui.router', 'infinite-scroll', 'LocalStorageModule'])
+angular.module('app', ['ngAnimate', 'ui.router', 'infinite-scroll', 'LocalStorageModule'])
     .constant('instagramClientId', '0b5021fd8589490ca339dff05ed9772b')
+    .constant('contentProviders', [
+        {id: 'instagram', name: 'Instagram'},
+        {id: 'googlenews', name: 'Google News'},
+        {id: 'mixed', name: 'Mixed'}
+    ])
+    .constant('contentProviderServices', {
+        instagram: 'instagram',
+        googlenews: 'googlenews',
+        mixed: 'mixedContentProvider'
+    })
     .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/tags');
         
@@ -12,7 +22,7 @@ angular.module('app', ['ui.router', 'infinite-scroll', 'LocalStorageModule'])
                 controller: 'TagsController'
             })
             .state('stream', {
-                url: '/stream/:source/:tag',
+                url: '/stream/:provider/:tag',
                 templateUrl: 'views/stream.html',
                 controller: 'StreamController'
             });

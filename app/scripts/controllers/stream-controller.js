@@ -1,28 +1,36 @@
 'use strict';
 
 angular.module('app')
-    .controller('StreamController', ['$scope', '$stateParams', '$interval', '$injector', '$window', 'tagStorage', '$sce', function ($scope, $stateParams, $interval, $injector, $window, tagStorage, $sce) {
+    .controller('StreamController', ['$scope', '$stateParams', '$interval', '$injector', '$window', '$sce', 'tagStorage', 'contentProviders', 'contentProviderServices', function ($scope, $stateParams, $interval, $injector, $window, $sce, tagStorage, contentProviders, contentProviderServices) {
         $scope.newItems = [];
         $scope.currentItems = [];
         $scope.isLoadingItems = false;
         $scope.hasOldItems = true;
+        $scope.contentProviderNames = [];
         $scope.tag = tagStorage.findOne($stateParams.tag);
+
+        for (var i in contentProviders) {
+            $scope.contentProviderNames[contentProviders[i].id] =
+                contentProviders[i].name;
+        }
         
         $scope.$on('$destroy', function () {
             $interval.cancel(task);
         });
         var task = null;
-        var contentProvider = $injector.get($stateParams.source);
+        var contentProvider =
+            $injector.get(contentProviderServices[$stateParams.provider]);
+        var itemsPerPage = 5;
         $scope.isLoadingItems = true;
-        contentProvider.consumeNewItems($stateParams.tag, true)
+        contentProvider.consumeNewItems($stateParams.tag, true, itemsPerPage)
             .then(function (items) {
                 $scope.currentItems = items;
-                task = $interval(getNewItems, 45000);
+                task = $interval(getNewItems, 5000);
             })
             .finally(function () {
                 $scope.isLoadingItems = false;
             });
-        
+
         /**
          * @param {String} htmlCode
          * @return {Object}
@@ -43,7 +51,7 @@ angular.module('app')
          */
         $scope.showOldItems = function() {
             $scope.isLoadingItems = true;
-            contentProvider.consumeOldItems($stateParams.tag)
+            contentProvider.consumeOldItems($stateParams.tag, itemsPerPage)
                 .then(function (items) {
                     if (items.length == 0) {
                         $scope.hasOldItems = false;
@@ -72,7 +80,8 @@ angular.module('app')
          */
         function getNewItems() {
             $scope.isLoadingItems = true;
-            contentProvider.consumeNewItems($stateParams.tag, false)
+            contentProvider
+                .consumeNewItems($stateParams.tag, false, itemsPerPage)
                 .then(function (items) {
                     $scope.newItems = items.concat($scope.newItems);
                 })

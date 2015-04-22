@@ -30,21 +30,15 @@ function GoogleNews($q, $http) {
      * @type {Number}
      */
     this.currentPage = 0;
-
-    /**
-     * @private
-     * @type {Number}
-     */
-    this.itemsPerPage = 8;
 }
 
 /**
  * @override
  */
-GoogleNews.prototype.consumeNewItems = function (tag, isInitial) {
+GoogleNews.prototype.consumeNewItems = function (tag, isInitial, count) {
     if (isInitial) {
         this.currentPage = 0;
-        return this.getItems(tag, false);
+        return this.getItems(tag, false, count);
     }
 
     var deferred = this.$q.defer();
@@ -55,24 +49,28 @@ GoogleNews.prototype.consumeNewItems = function (tag, isInitial) {
 /**
  * @override
  */
-GoogleNews.prototype.consumeOldItems = function (tag) {
-    return this.getItems(tag, true);
+GoogleNews.prototype.consumeOldItems = function (tag, count) {
+    return this.getItems(tag, true, count);
 };
 
 /**
  * @private
+ * @param {String} tag
+ * @param {Number} incrementPage
+ * @param {Number} count
+ * @return {Promise}
  */
-GoogleNews.prototype.getItems = function (tag, incrementPage) {
+GoogleNews.prototype.getItems = function (tag, incrementPage, count) {
     if (incrementPage) {
         this.currentPage++;
     }
 
     var deferred = this.$q.defer();
-    var start = this.currentPage * this.itemsPerPage;
+    var start = this.currentPage * count;
     var self = this;
 
     var url = 'https://ajax.googleapis.com/ajax/services/search/news?v=1.0&scoring=d&callback=JSON_CALLBACK&q=' +
-        encodeURIComponent(tag) + '&rsz=' + this.itemsPerPage + '&start=' + start;
+        encodeURIComponent(tag) + '&rsz=' + count + '&start=' + start;
 
     this.$http.jsonp(url).success(function (response) {
         var items = [];
@@ -92,7 +90,8 @@ GoogleNews.prototype.getItems = function (tag, incrementPage) {
                     header: results[i].title,
                     body: itemUrl,
                     img: (results[i].image == undefined) ? null : results[i].image.url,
-                    creation_date: new Date(results[i].publishedDate)
+                    creation_date: new Date(results[i].publishedDate),
+                    provider: 'googlenews'
                 });
             }
         } else {

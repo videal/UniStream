@@ -1,3 +1,11 @@
+#logo-img {
+    display: inline;
+}
+
+#logo-text {
+    vertical-align: middle;
+}
+
 #tags-list .tag {
     font-size: 150%;
     overflow: hidden;

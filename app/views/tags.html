@@ -2,16 +2,13 @@
     <div class="col-md-6 col-md-offset-3">
         <h2>Select stream source:</h2>
         <div>
-            <label class="radio-inline">
-                <input type="radio" name="contentProvider" value="instagram" ng-model="contentProvider" ng-model-options="{getterSetter: true}"/>Instagram
-            </label>
-            <label class="radio-inline">
-                <input type="radio" name="contentProvider" value="googlenews" ng-model="contentProvider" ng-model-options="{getterSetter: true}"/>Google news
+            <label class="radio-inline" ng-repeat="provider in contentProviders">
+                <input type="radio" name="contentProvider" ng-value="provider.id" ng-model="contentProvider" ng-model-options="{getterSetter: true}"/>{{ provider.name }}
             </label>
         </div>
         <h2>Select tag:</h2>
         <div id="tags-list" class="list-group">
-            <a class="list-group-item tag" ng-repeat="tag in tags" ui-sref="stream({'source': contentProvider(), 'tag': tag.name})">
+            <a class="list-group-item tag" ng-repeat="tag in tags" ui-sref="stream({'provider': contentProvider(), 'tag': tag.name})">
                 {{ tag.name }}
                 <button class="btn btn-danger delete-btn pull-right" ng-click="removeTag(tag, $event)">
                     <span class="glyphicon glyphicon-remove"></span>

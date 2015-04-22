@@ -9,7 +9,7 @@
         <ul id="stream-items" infinite-scroll="showOldItems()" infinite-scroll-distance="1" infinite-scroll-immediate-check="false" infinite-scroll-disabled='isLoadingItems || !hasOldItems'>
             <li ng-repeat="item in currentItems">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Posted on {{ item.creation_date | date:'MMM d, y HH:mm:ss'}}</div>
+                    <div class="panel-heading">Posted on {{ item.creation_date | date:'MMM d, y HH:mm:ss'}} at {{ contentProviderNames[item.provider] }}</div>
                     <div class="panel-body">
                         <img class="img-thumbnail center-block" ng-show="item.img" ng-src="{{ item.img }}"/>
                         <h3 ng-bind-html="renderHTML(item.header)"></h3>

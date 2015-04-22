@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('app')
-    .controller('TagsController', ['$scope', 'tagStorage', 'userSettings', function ($scope, tagStorage, userSettings) {
+    .controller('TagsController', ['$scope', 'tagStorage', 'userSettings', 'contentProviders', function ($scope, tagStorage, userSettings, contentProviders) {
         $scope.newTag = {name: ''};
         $scope.tags = tagStorage.findAll();
-
+        $scope.contentProviders = contentProviders;
+        
         /**
          * @param {String|undefined} name
          * @return {String}

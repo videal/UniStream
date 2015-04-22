@@ -72,7 +72,7 @@ GoogleNews.prototype.getItems = function (tag, incrementPage) {
     var self = this;
 
     var url = 'https://ajax.googleapis.com/ajax/services/search/news?v=1.0&scoring=d&callback=JSON_CALLBACK&q=' +
-        tag + '&rsz=' + this.itemsPerPage + '&start=' + start;
+        encodeURIComponent(tag) + '&rsz=' + this.itemsPerPage + '&start=' + start;
 
     this.$http.jsonp(url).success(function (response) {
         var items = [];
@@ -84,9 +84,13 @@ GoogleNews.prototype.getItems = function (tag, incrementPage) {
             var results = response.responseData.results;
 
             for (var i in results) {
+                var itemUrl = results[i].content +
+                    ' <a target="_blank" href="' +
+                    decodeURIComponent(results[i].url) + '">more</a>';
+
                 items.push({
                     header: results[i].title,
-                    body: results[i].content,
+                    body: itemUrl,
                     img: (results[i].image == undefined) ? null : results[i].image.url,
                     creation_date: new Date(results[i].publishedDate)
                 });

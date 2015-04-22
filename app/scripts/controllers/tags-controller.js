@@ -1,10 +1,21 @@
 'use strict';
 
 angular.module('app')
-    .controller('TagsController', ['$scope', 'tagStorage', function ($scope, tagStorage) {
+    .controller('TagsController', ['$scope', 'tagStorage', 'userSettings', function ($scope, tagStorage, userSettings) {
         $scope.newTag = {name: ''};
-        $scope.contentSource = 'instagram';
         $scope.tags = tagStorage.findAll();
+
+        /**
+         * @param {String|undefined} name
+         * @return {String}
+         */
+        $scope.contentProvider = function (name) {
+            if (angular.isDefined(name)) {
+                userSettings.setContentProvider(name);
+            }
+            
+            return userSettings.getContentProvider();
+        };
         
         /**
          * @param {Object} form

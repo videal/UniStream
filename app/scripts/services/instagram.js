@@ -159,7 +159,8 @@ Instagram.prototype.fillItems = function (response, items) {
         }
 
         items.push({
-            header: response.data[i].caption.text,
+            header: response.data[i].caption == null ? '' :
+                response.data[i].caption.text,
             body: '',
             img: response.data[i].images.standard_resolution.url,
             creation_date: new Date(

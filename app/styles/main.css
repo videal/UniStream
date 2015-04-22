@@ -3,8 +3,12 @@
     overflow: hidden;
 }
 
+#tags-add-form {
+    margin-bottom: 40px;
+}
+
 #tags-name-input {
-    width: 510px;
+    width: 498px;
 }
 
 #stream-items {

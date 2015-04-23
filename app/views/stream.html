@@ -4,7 +4,7 @@
             <h1>Stream for <strong class="text-primary">{{ tag.name }}</strong></h1>
         </div>
         <p class="text-center">
-            <button class="btn btn-primary" ng-show="newItems.length > 0" ng-click="showNewItems()">View {{ newItems.length }} new items(s)</button>
+            <button class="btn btn-primary" ng-show="newItems.length > 0" ng-click="showNewItems()" app-animate-on-increase="newItems.length" app-animate-on-increase-class="pulse">View {{ newItems.length }} new items(s)</button>
         </p>
         <ul id="stream-items" infinite-scroll="showOldItems()" infinite-scroll-distance="1" infinite-scroll-immediate-check="false" infinite-scroll-disabled='isLoadingItems || !hasOldItems'>
             <li ng-repeat="item in currentItems">

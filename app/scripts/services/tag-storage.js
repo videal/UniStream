@@ -23,8 +23,7 @@ function TagStorage(localStorage) {
      */
     this.tags = [
         {name: 'love'},
-        {name: 'GabeNewell'},
-        {name: 'RickAstley'}
+        {name: 'selfie'}
     ];
 
     this.init();

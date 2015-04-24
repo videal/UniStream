@@ -24,8 +24,15 @@
     padding-left: 0;
 }
 
-#stream-scroll-btn {
+#stream-scroll-to-top-btn {
     position: fixed;
     bottom: 10px;
     right: 10px;
+}
+
+#stream-show-new-items-btn.ui-scrollfix {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    margin-left: -77px;
 }

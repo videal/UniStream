@@ -4,7 +4,7 @@
             <h1>Stream for <strong class="text-primary">{{ tag.name }}</strong></h1>
         </div>
         <p class="text-center">
-            <button class="btn btn-primary" ng-show="newItems.length > 0" ng-click="showNewItems()" app-animate-on-increase="newItems.length" app-animate-on-increase-class="pulse">View {{ newItems.length }} new items(s)</button>
+            <button id="stream-show-new-items-btn" class="btn btn-primary" ng-show="newItems.length > 0" ng-click="showNewItems()" app-animate-on-increase="newItems.length" app-animate-on-increase-class="pulse" ui-scrollfix="+200">View {{ newItems.length }} new items(s)</button>
         </p>
         <ul id="stream-items" infinite-scroll="showOldItems()" infinite-scroll-distance="1" infinite-scroll-immediate-check="false" infinite-scroll-disabled='isLoadingItems || !hasOldItems'>
             <li ng-repeat="item in currentItems">
@@ -19,7 +19,7 @@
             </li>
         </ul>
     </div>
-    <button id="stream-scroll-btn" class="btn btn-lg btn-success" title="Goto to top" ng-show="true" ng-click="gotoTop()">
+    <button id="stream-scroll-to-top-btn" class="btn btn-lg btn-success" title="Goto to top" ng-show="true" ng-click="gotoTop()">
         <span class="glyphicon glyphicon-arrow-up"></span>
     </button>
 </div>

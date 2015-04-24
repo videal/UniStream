@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app', ['ngAnimate', 'ui.router', 'infinite-scroll', 'LocalStorageModule', 'ngAnimate'])
+angular.module('app', ['ngAnimate', 'ui.router', 'infinite-scroll', 'LocalStorageModule', 'ngAnimate', 'ui.utils', 'duScroll'])
     .constant('instagramClientId', '0b5021fd8589490ca339dff05ed9772b')
     .constant('contentProviders', [
         {id: 'instagram', name: 'Instagram'},

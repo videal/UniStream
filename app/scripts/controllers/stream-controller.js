@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-    .controller('StreamController', ['$scope', '$stateParams', '$interval', '$injector', '$window', '$sce', 'tagStorage', 'contentProviders', 'contentProviderServices', function ($scope, $stateParams, $interval, $injector, $window, $sce, tagStorage, contentProviders, contentProviderServices) {
+    .controller('StreamController', ['$scope', '$stateParams', '$interval', '$injector', '$window', '$document', '$sce', 'tagStorage', 'contentProviders', 'contentProviderServices', function ($scope, $stateParams, $interval, $injector, $window, $document, $sce, tagStorage, contentProviders, contentProviderServices) {
         $scope.newItems = [];
         $scope.currentItems = [];
         $scope.isLoadingItems = false;
@@ -43,7 +43,7 @@ angular.module('app')
          * @return {undefined}
          */
         $scope.gotoTop = function() {
-            $window.scrollTo(0, 0);
+            $document.duScrollTo(0, 0, 1000);
         };
         
         /**
@@ -73,6 +73,7 @@ angular.module('app')
             $scope.currentItems =
                 $scope.newItems.concat($scope.currentItems);
             $scope.newItems = [];
+            $scope.gotoTop();
         };
 
         /**
